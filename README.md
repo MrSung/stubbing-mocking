@@ -3,7 +3,7 @@
 ## Start Webpack devServer
 
 ```sh
-start:json-server
+yarn start:json-server
 ```
 
 ## Access URL
@@ -16,4 +16,4 @@ http://localhost:1279/mirageJs.html
 
 ### JSON Server
 
-http://localhost:1279/mirageJs.html
+http://localhost:1279/jsonServer.html
