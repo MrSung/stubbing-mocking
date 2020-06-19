@@ -1,23 +1,48 @@
 import '@exampledev/new.css';
-import './server';
+import { loadMirageInDev } from './server';
 
-/*
-Build the user's list
+/**
+ * Render list
  */
-function buildList(data) {
-  console.log(data);
+function renderList({ el, html }) {
+  el.innerHTML = html;
 }
 
-/*
-Fetch the data on button click
+/**
+ * Fetch and set data
  */
-const button = document.getElementById('fetch-btn');
+async function fetchAndSetData({ el, endpoint }) {
+  const response = await fetch(endpoint);
+  if (!response.ok) throw Error(response.statusText);
+  const itemArray = await response.json();
+  const htmlToInsert = itemArray
+    .map(
+      item => `
+          <h2>${item.name}</h2>
+          <ul>
+            ${item.albums.map(album => `<li>${album}</li>`).join('')}
+          </ul>
+        `
+    )
+    .join('');
+  renderList({ el, html: htmlToInsert });
+}
 
-button.addEventListener('click', function() {
-  fetch('/api/users/')
-    .then(response => {
-      if (!response.ok) throw Error(response.statusText);
-      return response.json();
-    })
-    .then(json => buildList(json));
+/**
+ * Fetch the data on button click
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  const buttonBlues = document.getElementById('button-blues');
+  const buttonRock = document.getElementById('button-rock');
+  const output = document.getElementById('output');
+
+  loadMirageInDev();
+
+  buttonBlues.addEventListener('click', () => {
+    fetchAndSetData({ el: output, endpoint: '/api/musicians/blues/' });
+  });
+
+  buttonRock.addEventListener('click', () => {
+    fetchAndSetData({ el: output, endpoint: '/api/musicians/rock/' });
+  });
 });

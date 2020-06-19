@@ -1,14 +1,20 @@
-import { Server } from 'miragejs';
+import musicians from './data/musicians';
 
-// eslint-disable-next-line no-unused-vars
-const server = new Server({
-  routes() {
-    this.namespace = 'api';
+const loadMirage = () => import('miragejs');
 
-    this.get('/users/', () => [
-      { name: 'Angy', surname: 'T.' },
-      { name: 'Chris', surname: 'B.' },
-      { name: 'Juliana', surname: 'Crain' },
-    ]);
-  },
-});
+export function loadMirageInDev() {
+  if (process.env.NODE_ENV !== 'development') return;
+
+  loadMirage().then(
+    ({ Server }) =>
+      new Server({
+        routes() {
+          this.namespace = 'api';
+
+          this.get('/musicians/blues/', () => musicians.blues);
+
+          this.get('/musicians/rock/', () => musicians.rock);
+        },
+      })
+  );
+}
