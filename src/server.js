@@ -1,4 +1,4 @@
-import musicians from './data/musicians';
+import db from './api/db.json';
 
 const loadMirage = () => import('miragejs');
 
@@ -11,9 +11,9 @@ export function loadMirageInDev() {
         routes() {
           this.namespace = 'api';
 
-          this.get('/musicians/blues/', () => musicians.blues);
+          this.get('/musicians/blues/', () => db.blues);
 
-          this.get('/musicians/rock/', () => musicians.rock);
+          this.get('/musicians/rock/', () => db.rock);
         },
       })
   );
